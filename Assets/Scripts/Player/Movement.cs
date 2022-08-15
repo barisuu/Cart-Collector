@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Movement : MonoBehaviour
+public class Movement : Player
 {
     Rigidbody rb;
     float dragVal;
@@ -11,6 +11,9 @@ public class Movement : MonoBehaviour
     public FloatingJoystick floatingJoystick;
 
     [SerializeField] float moveSpeed = 10;
+
+    private static readonly int MoveSpeed = Animator.StringToHash("MoveSpeed");
+    private static readonly int isMoving = Animator.StringToHash("isMoving");
 
     // Start is called before the first frame update
     void Start()
@@ -24,9 +27,17 @@ public class Movement : MonoBehaviour
     void Update()
     {
         var direction = Vector3.right * floatingJoystick.Horizontal +
-         Vector3.forward * floatingJoystick.Vertical;
-         if (!Input.GetMouseButton(0)) direction = direction.normalized / 1000;
-        
+        Vector3.forward * floatingJoystick.Vertical;
+        if (!Input.GetMouseButton(0)) direction = direction.normalized / 1000;
+        if (direction.magnitude != 0)
+        {
+            Animator.SetBool(isMoving, true);
+        }
+        else if(direction.magnitude == 0)
+        {
+            Animator.SetBool(isMoving, false);
+        }
+        Animator.SetFloat(MoveSpeed, direction.magnitude);
         if (Mathf.Abs(floatingJoystick.Vertical) > 0.001f ||
             Mathf.Abs(floatingJoystick.Horizontal) > 0.001f)
         {
@@ -39,6 +50,5 @@ public class Movement : MonoBehaviour
             transform.rotation = Quaternion.Euler(0f, _heading * Mathf.Rad2Deg, 0);
             rb.velocity = Vector3.zero;
         }
-        //rb.drag=dragVal;
     }
 }

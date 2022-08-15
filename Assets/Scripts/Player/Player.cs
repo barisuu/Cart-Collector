@@ -12,7 +12,7 @@ public class Player : MonoSingleton<Player>
 
     public Rigidbody Rigidbody { get; private set;}
 
-    //public Animator Animator { get; private set;}
+    public Animator Animator { get; private set;}
     
     //public SkinnedMeshRenderer SkinnedMeshRenderer { get; private set;}
     public MeshRenderer MeshRenderer {get; private set;}
@@ -25,6 +25,8 @@ public class Player : MonoSingleton<Player>
         Rigidbody = GetComponent<Rigidbody>();
 
         MeshRenderer = GetComponent<MeshRenderer>();
+
+        Animator = GetComponent<Animator>();
     }
 
 
