@@ -5,25 +5,45 @@ using UnityEngine;
 public class CartDrop : MonoBehaviour
 {
     [SerializeField] private List<GameObject> dropoffStack;
-    private bool canTakeCart;
+    [SerializeField] private float ConversionTime;
+    [SerializeField] private float TakingTime;
 
-    private int _dropoffStackAmount=0;
-
-    public int DropoffStackAmount{
+    private float _multiplier =1;
+    private int _dropoffStackAmount = 0;
+    private float _activateTimer;
+    private float _deactivateTimer;
+    public int DropoffStackAmount
+    {
         get => _dropoffStackAmount;
 
-        set{
-            if(value>_dropoffStackAmount){ //Increasing amount.
-                if(value>=dropoffStack.Count){ //If at full capacity return without changing anything.
+        set
+        {
+            if (value > _dropoffStackAmount)
+            { //Increasing amount.
+                if (value >= dropoffStack.Count)
+                { //If at full capacity return without changing anything.
                     return;
                 }
                 else
                 {
                     _dropoffStackAmount = value;
-                    Debug.Log("Dropoffstackamount: " +_dropoffStackAmount);
-                    dropoffStack[_dropoffStackAmount-1].SetActive(true);
+                    dropoffStack[_dropoffStackAmount - 1].SetActive(true);
+                    Debug.Log("Amount : " + _dropoffStackAmount);
                 }
-                
+
+            }
+            else if(value < _dropoffStackAmount)
+            {
+                if(_dropoffStackAmount <= 0)
+                {
+                    return;
+                }
+                _dropoffStackAmount = value;
+                if(_dropoffStackAmount <= 0)
+                {
+                    _dropoffStackAmount = 0;
+                }
+                dropoffStack[_dropoffStackAmount].SetActive(false);
             }
         }
     }
@@ -36,27 +56,75 @@ public class CartDrop : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (canTakeCart == true && Player.Instance.CartCollect.CartAmount>0)
+        if (DropoffStackAmount > 0)
         {
-            Player.Instance.CartCollect.CartAmount--;
-            DropoffStackAmount++;
+            if (_deactivateTimer <= 0)
+            {
+                CalculateMoney();
+                DeactivateCart();
+            }
+            else
+            {
+                _deactivateTimer -= Time.deltaTime;
+            }
         }
+        
     }
 
+    private void CalculateMoney()
+    {
+        Debug.Log("Multiplier : " + MoneyManager.Instance.Multiplier);
+        MoneyManager.Instance.MoneyAmount += MoneyManager.Instance.Multiplier * 1;
+        EventManager.OnCollectMoney();
+    }
+
+    private void ActivateCart()
+    {
+        if (_dropoffStackAmount >= dropoffStack.Count)
+        {
+            _dropoffStackAmount = dropoffStack.Count;
+            return;
+        }
+        DropoffStackAmount++;
+        Player.Instance.CartCollect.CartAmount--;
+    }
+
+    private void DeactivateCart()
+    {
+        if(_dropoffStackAmount <= 0)
+        {
+            MoneyManager.Instance.Multiplier = 1; // Reset the multiplier back to 1 when there are no more carts in the dropoff point.
+            _dropoffStackAmount = 0;
+            return;
+        }
+            DropoffStackAmount--;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Player" && Player.Instance.CartCollect.CartAmount>0)
+        if (other.gameObject.CompareTag("Player") ||other.gameObject.CompareTag("StackCart"))
         {
-                canTakeCart = true;  
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.tag == "Player")
-        {
-                canTakeCart = false;
+            if (Player.Instance.CartCollect.CartAmount > 0)
+            {
+                ActivateCart();
+                _deactivateTimer = ConversionTime;
+                if (DropoffStackAmount >= 3)
+                {
+                    MoneyManager.Instance.Multiplier = 1.25f;
+                    if (DropoffStackAmount >= 5)
+                    {
+                        MoneyManager.Instance.Multiplier = 1.5f;
+                        if (DropoffStackAmount >= 10)
+                        {
+                            MoneyManager.Instance.Multiplier = 1.75f;
+                            if (DropoffStackAmount >= 15)
+                            {
+                                MoneyManager.Instance.Multiplier = 2f;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 

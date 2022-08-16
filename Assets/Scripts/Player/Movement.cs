@@ -5,12 +5,13 @@ using UnityEngine;
 public class Movement : Player
 {
     Rigidbody rb;
-    float dragVal;
     private float _heading;
 
     public FloatingJoystick floatingJoystick;
 
     [SerializeField] float moveSpeed = 10;
+    [SerializeField] float turnRate;
+    [SerializeField] float turnRateNoTouch;
 
     private static readonly int MoveSpeed = Animator.StringToHash("MoveSpeed");
     private static readonly int isMoving = Animator.StringToHash("isMoving");
@@ -19,8 +20,7 @@ public class Movement : Player
     void Start()
     {
         floatingJoystick = FindObjectOfType<FloatingJoystick>();
-        rb=GetComponent<Rigidbody>();
-        dragVal=rb.drag;
+        rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -33,7 +33,7 @@ public class Movement : Player
         {
             Animator.SetBool(isMoving, true);
         }
-        else if(direction.magnitude == 0)
+        else if (direction.magnitude == 0)
         {
             Animator.SetBool(isMoving, false);
         }
@@ -42,12 +42,13 @@ public class Movement : Player
             Mathf.Abs(floatingJoystick.Horizontal) > 0.001f)
         {
             _heading = Mathf.Atan2(direction.x, direction.z);
-            transform.rotation = Quaternion.Euler(0f, _heading * Mathf.Rad2Deg, 0);
-            rb.velocity = direction * moveSpeed;
+            Quaternion target = Quaternion.Euler(0f, _heading * Mathf.Rad2Deg, 0);
+            transform.rotation = Quaternion.Slerp(transform.rotation, target, Time.deltaTime * turnRate);
+            rb.velocity = direction * moveSpeed;            
         }
         else
         {
-            transform.rotation = Quaternion.Euler(0f, _heading * Mathf.Rad2Deg, 0);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0f, _heading * Mathf.Rad2Deg , 0) , Time.deltaTime * turnRateNoTouch);
             rb.velocity = Vector3.zero;
         }
     }

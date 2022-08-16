@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CartCollect : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> cartStack;
+    [SerializeField] public List<GameObject> cartStack;
     [SerializeField] public int currentMax;
     private static readonly int hasCart = Animator.StringToHash("hasCart");
 
