@@ -24,7 +24,7 @@ public class MoneyController : MonoBehaviour
 
     private void Start()
     {
-        MoneyManager.Instance.MoneyAmount = int.Parse(PlayerPrefs.GetString("CharacterMoney"));
+        MoneyManager.Instance.MoneyAmount = float.Parse(PlayerPrefs.GetString("CharacterMoney"));
         moneyText.text = PlayerPrefs.GetString("CharacterMoney") ;
     }
 }

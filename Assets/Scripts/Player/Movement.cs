@@ -9,7 +9,7 @@ public class Movement : Player
 
     public FloatingJoystick floatingJoystick;
 
-    [SerializeField] float moveSpeed = 10;
+    [SerializeField] public float moveSpeed = 8;
     [SerializeField] float turnRate;
     [SerializeField] float turnRateNoTouch;
 
@@ -19,6 +19,7 @@ public class Movement : Player
     // Start is called before the first frame update
     void Start()
     {
+        moveSpeed=PlayerPrefs.GetFloat("MoveSpeed");
         floatingJoystick = FindObjectOfType<FloatingJoystick>();
         rb = GetComponent<Rigidbody>();
     }

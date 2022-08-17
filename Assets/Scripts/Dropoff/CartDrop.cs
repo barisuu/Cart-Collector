@@ -8,9 +8,7 @@ public class CartDrop : MonoBehaviour
     [SerializeField] private float ConversionTime;
     [SerializeField] private float TakingTime;
 
-    private float _multiplier =1;
     private int _dropoffStackAmount = 0;
-    private float _activateTimer;
     private float _deactivateTimer;
     public int DropoffStackAmount
     {
@@ -73,7 +71,6 @@ public class CartDrop : MonoBehaviour
 
     private void CalculateMoney()
     {
-        Debug.Log("Multiplier : " + MoneyManager.Instance.Multiplier);
         MoneyManager.Instance.MoneyAmount += MoneyManager.Instance.Multiplier * 1;
         EventManager.OnCollectMoney();
     }
@@ -110,16 +107,16 @@ public class CartDrop : MonoBehaviour
                 _deactivateTimer = ConversionTime;
                 if (DropoffStackAmount >= 3)
                 {
-                    MoneyManager.Instance.Multiplier = 1.25f;
+                    MoneyManager.Instance.Multiplier = 2f;
                     if (DropoffStackAmount >= 5)
                     {
-                        MoneyManager.Instance.Multiplier = 1.5f;
+                        MoneyManager.Instance.Multiplier = 4f;
                         if (DropoffStackAmount >= 10)
                         {
-                            MoneyManager.Instance.Multiplier = 1.75f;
+                            MoneyManager.Instance.Multiplier = 8f;
                             if (DropoffStackAmount >= 15)
                             {
-                                MoneyManager.Instance.Multiplier = 2f;
+                                MoneyManager.Instance.Multiplier = 10f;
                             }
                         }
                     }

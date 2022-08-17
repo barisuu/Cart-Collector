@@ -48,7 +48,7 @@ public class CartCollect : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        currentMax= PlayerPrefs.GetInt("CurrentMax");
     }
 
     // Update is called once per frame
