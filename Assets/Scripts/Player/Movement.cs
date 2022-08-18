@@ -19,7 +19,14 @@ public class Movement : Player
     // Start is called before the first frame update
     void Start()
     {
-        moveSpeed=PlayerPrefs.GetFloat("MoveSpeed");
+        if(PlayerPrefs.GetFloat("MoveSpeed") > 0)
+        {
+            moveSpeed = PlayerPrefs.GetFloat("MoveSpeed");
+        }
+        else
+        {
+            moveSpeed = moveSpeed;
+        }
         floatingJoystick = FindObjectOfType<FloatingJoystick>();
         rb = GetComponent<Rigidbody>();
     }

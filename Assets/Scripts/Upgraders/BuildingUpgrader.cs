@@ -11,11 +11,16 @@ public class BuildingUpgrader : Upgrader
 
     private void Start()
     {
-        //UpgradeManager.Instance.BuildingLevel = 0;
+        UpgradeManager.Instance.BuildingLevel = 0;
         if (PlayerPrefs.GetInt("BuildingLevel") > 0)
         {
             UpgradeManager.Instance.BuildingLevel = PlayerPrefs.GetInt("BuildingLevel");
             MarketList[0].SetActive(false);
+            if (UpgradeManager.Instance.BuildingLevel >= UpgradeManager.Instance.BuildingPrices.Count)
+            {
+                lastUpgrade = true;
+                this.transform.parent.gameObject.SetActive(false);
+            }
         }
         MarketList[UpgradeManager.Instance.BuildingLevel].SetActive(true);
         moneyRequired = UpgradeManager.Instance.BuildingPrices[UpgradeManager.Instance.BuildingLevel];
@@ -83,7 +88,7 @@ public class BuildingUpgrader : Upgrader
                     if(UpgradeManager.Instance.BuildingLevel >= UpgradeManager.Instance.BuildingPrices.Count)
                     {
                         lastUpgrade = true;
-                        gameObject.SetActive(false);
+                        this.transform.parent.gameObject.SetActive(false);
                     }
                     if(lastUpgrade == false)
                     {

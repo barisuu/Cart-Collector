@@ -12,7 +12,12 @@ public class CarryAmountUpgrader : Upgrader
     {
         if (PlayerPrefs.GetInt("CarryAmountLevel") > 0)
         {
-            UpgradeManager.Instance.BuildingLevel = PlayerPrefs.GetInt("CarryAmountLevel");
+            UpgradeManager.Instance.CarryAmountLevel = PlayerPrefs.GetInt("CarryAmountLevel");
+            if (UpgradeManager.Instance.CarryAmountLevel >= UpgradeManager.Instance.CarryAmountPrices.Count)
+            {
+                lastUpgrade = true;
+                this.transform.parent.gameObject.SetActive(false);
+            }
         }
         moneyRequired = UpgradeManager.Instance.CarryAmountPrices[UpgradeManager.Instance.CarryAmountLevel];
         _disableTimer = DisableDuration;
@@ -79,7 +84,7 @@ public class CarryAmountUpgrader : Upgrader
                     if (UpgradeManager.Instance.CarryAmountLevel >= UpgradeManager.Instance.CarryAmountPrices.Count)
                     {
                         lastUpgrade = true;
-                        gameObject.SetActive(false);
+                        this.transform.parent.gameObject.SetActive(false);
                     }
                     if (lastUpgrade == false)
                     {

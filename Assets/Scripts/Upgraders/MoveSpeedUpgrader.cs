@@ -12,7 +12,13 @@ public class MoveSpeedUpgrader : Upgrader
     {
         if (PlayerPrefs.GetInt("MoveSpeedLevel") > 0)
         {
-            UpgradeManager.Instance.BuildingLevel = PlayerPrefs.GetInt("MoveSpeedLevel");
+            UpgradeManager.Instance.MoveSpeedLevel = PlayerPrefs.GetInt("MoveSpeedLevel");
+            if (UpgradeManager.Instance.MoveSpeedLevel >= UpgradeManager.Instance.MoveSpeedPrices.Count)
+            {
+                Debug.Log(UpgradeManager.Instance.MoveSpeedLevel);
+                lastUpgrade = true;
+                this.transform.parent.gameObject.SetActive(false);
+            }
         }
         moneyRequired = UpgradeManager.Instance.MoveSpeedPrices[UpgradeManager.Instance.MoveSpeedLevel];
         _disableTimer = DisableDuration;
@@ -79,7 +85,7 @@ public class MoveSpeedUpgrader : Upgrader
                     if (UpgradeManager.Instance.MoveSpeedLevel >= UpgradeManager.Instance.MoveSpeedPrices.Count)
                     {
                         lastUpgrade = true;
-                        gameObject.SetActive(false);
+                        this.transform.parent.gameObject.SetActive(false);
                     }
                     if (lastUpgrade == false)
                     {
