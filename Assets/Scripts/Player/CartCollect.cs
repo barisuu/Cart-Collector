@@ -7,6 +7,7 @@ public class CartCollect : MonoBehaviour
     [SerializeField] public List<GameObject> cartStack;
     [SerializeField] public int currentMax;
     private static readonly int hasCart = Animator.StringToHash("hasCart");
+    public bool isFull;
 
     private int _cartAmount;
 
@@ -24,6 +25,7 @@ public class CartCollect : MonoBehaviour
                 if (_cartAmount >= currentMax) //If at or over max reset to max and set player to max visual.
                 {
                     _cartAmount = currentMax;
+                    isFull = true;
                     //Player.Instance.PlayerRenderer.setFull();
                 }
             }
@@ -34,6 +36,7 @@ public class CartCollect : MonoBehaviour
                     return;
                 }
                 _cartAmount = value;
+                isFull = false;
                 if(_cartAmount <= 0)
                 {
                     _cartAmount = 0;
@@ -57,12 +60,6 @@ public class CartCollect : MonoBehaviour
             currentMax = 3;
         }
         
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     private void OnTriggerEnter(Collider other) {
